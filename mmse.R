@@ -1,5 +1,155 @@
 dat<-read.csv("C:/Users/john/Dropbox/r/mmse.csv",header=T,sep=",")
+dat<-read.csv("C:/Users/mjay8/Dropbox/mmse.csv",header=T,sep=",")
 head(dat)
+####데이터 전처리####
 attach(dat)
+#401
+a401<-ifelse(C401==3,3,
+             ifelse(C401==2,2,
+                    ifelse(C401==1,1,
+                           ifelse(C401==5,0,NA))))
+head(a401)
+table(C401,a401,useNA='always')
+length(C401);length(a401)
+#402
+a402<-ifelse(C402==1,1,
+             ifelse(C402==5,0,NA))
+table(C402,a402,useNA='always')
+table(C402)
+table(a402)
+length(C402);length(a402)
+#403
+a403<-ifelse(C403==1,1,
+             ifelse(C403==5,0,NA))
+table(C403,a403,useNA='always')
+table(C403)
+table(a403)
+length(C403);length(a403)
 
+#404
+a404<-ifelse(C404==1,1,
+             ifelse(C404==5,0,NA))
+table(C404,a404,useNA='always')
+table(C404)
+table(a404)
+length(C404);length(a404)
+#405
+a405<-ifelse(C405==4,4,
+             ifelse(C405==3,3,
+             ifelse(C405==2,2,
+                    ifelse(C405==1,1,
+                           ifelse(C405==5,0,NA)))))
+head(a405)
+table(C405,a405,useNA='always')
+table(C405)
+table(a405)
+length(C405);length(a405)
+#406
+a406<-ifelse(C406==3,3,
+                    ifelse(C406==2,2,
+                           ifelse(C406==1,1,
+                                  ifelse(C406==5,0,NA))))
+table(C406,a406,useNA='always')
+table(C406)
+table(a406)
+length(C406);length(a406)
+#407
+a407<-ifelse(C407==1,1,
+             ifelse(C407==5,0,NA))
+table(C407,a407,useNA='always')
+table(C407)
+table(a407)
+length(C407);length(a407)
+#408
+a408<-ifelse(C408==1,1,
+             ifelse(C408==5,0,NA))
+table(C408,a408,useNA='always')
+table(C408)
+table(a408)
+length(C408);length(a408)
+#409
+a409<-ifelse(C409==1,1,
+             ifelse(C409==5,0,NA))
+table(C409,a409,useNA='always')
+table(C409)
+table(a409)
+length(C409);length(a409)
+#410
+a410<-ifelse(C410==1,1,
+             ifelse(C410==5,0,NA))
+table(C410,a410,useNA='always')
+table(C410)
+table(a410)
+length(C410);length(a410)
+#411
+a411<-ifelse(C411==1,1,
+             ifelse(C411==5,0,NA))
+table(C411,a411,useNA='always')
+table(C411)
+table(a411)
+length(C411);length(a411)
+#412
+a412<-ifelse(C412==3,3,
+             ifelse(C412==2,2,
+                    ifelse(C412==1,1,
+                           ifelse(C412==5,0,NA))))
+table(C412,a412,useNA='always')
+table(C412)
+table(a412)
+length(C412);length(a412)
+#413
+a413<-ifelse(C413==1,1,
+             ifelse(C413==5,0,NA))
+table(C413,a413,useNA='always')
+table(C413)
+table(a413)
+length(C413);length(a413)
+#414
+a414<-ifelse(C414==1,1,
+             ifelse(C414==5,0,NA))
+table(C414,a414,useNA='always')
+table(C414)
+table(a414)
+length(C414);length(a414)
+#415
+a415<-ifelse(C415==1,1,
+             ifelse(C415==5,0,NA))
+table(C415,a415,useNA='always')
+table(C415)
+table(a415)
+length(C415);length(a415)
+#416
+a416<-ifelse(C416==3,3,
+             ifelse(C416==2,2,
+                    ifelse(C416==1,1,
+                           ifelse(C416==5,0,NA))))
+table(C416,a416,useNA='always')
+table(C416)
+table(a416)
+length(C416);length(a416)
+#417
+a417<-ifelse(C417==3,2,
+                    ifelse(C417==1,1,
+                           ifelse(C417==5,0,NA)))
+table(C417,a417,useNA='always')
+table(C417)
+table(a417)
+length(C417);length(a417)
+#418
+a418<-ifelse(C418==1,1,
+             ifelse(C418==5,0,NA))
+table(C418,a418,useNA='always')
+table(C418)
+table(a418)
+length(C418);length(a418)
+#419
+a419<-ifelse(C419==1,1,
+             ifelse(C419==5,0,NA))
+table(C419,a419,useNA='always')
+table(C419)
+table(a419)
+length(C419);length(a419)
 detach(dat)
+response<-data.frame(a401,a402,a403,a404,a405,a406,a407,a408,a409,a410,a411,a412,a413,a414,a415,a416,a417,a418,a419)
+####데이터 전처리####
+
