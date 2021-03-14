@@ -20,9 +20,8 @@ a402<-ifelse(C402==1,1,
              ifelse(C402==-8,NA,
                     ifelse(C402==-9,0,
              ifelse(C402==5,0,NA))))
+head(a402)
 table(C402,a402,useNA='always')
-table(C402)
-table(a402)
 length(C402);length(a402)
 #403
 a403<-ifelse(C403==1,1,
