@@ -1,7 +1,7 @@
 dat<-read.csv("C:/Users/john/Dropbox/r/mmse.csv",header=T,sep=",")
 dat<-read.csv("C:/Users/mjay8/Dropbox/mmse.csv",header=T,sep=",")
 head(dat)
-####데이터 전처리####
+#### 데이터 전처리 ####
 attach(dat)
 #401
 a401<-ifelse(C401==3,3,
@@ -189,11 +189,21 @@ table(C419)
 table(a419)
 length(C419);length(a419)
 detach(dat)
-response<-data.frame(a401,a402,a403,a404,a405,a406,a407,a408,a409,a410,a411,a412,a413,a414,a415,a416,a417,a418,a419)
-####CTT 점수산출####
-attach(response)
+raw_response<-data.frame(a401,a402,a403,a404,a405,a406,a407,a408,a409,a410,a411,a412,a413,a414,a415,a416,a417,a418,a419)
+
+#모두 NA인 행제거
+install.packages("dplyr")
+library(dplyr)
+response <-  raw_response %>% filter(!is.na(a401) & !is.na(a402) &!is.na(a403)&!is.na(a404)&!is.na(a405)&!is.na(a406)&!is.na(a407)&!is.na(a408)&!is.na(a409)&!is.na(a410)&!is.na(a411)&!is.na(a412)&!is.na(a413)&!is.na(a414)&!is.na(a415)&!is.na(a416)&!is.na(a417)&!is.na(a418)&!is.na(a419))
+
+
+#### CTT 점수산출 ####
 CTT<-vector("double",nrow(response))
 for ( i in 1:nrow(response) ){
 CTT[[i]]<-sum(response[i,1:19],na.rm=T)}
 table(CTT)
 hist(CTT)
+#### PCM 점수산출 ####
+install.packages("mirt")
+library(mirt)
+mirt(response,"Rasch")
