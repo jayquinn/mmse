@@ -190,5 +190,10 @@ table(a419)
 length(C419);length(a419)
 detach(dat)
 response<-data.frame(a401,a402,a403,a404,a405,a406,a407,a408,a409,a410,a411,a412,a413,a414,a415,a416,a417,a418,a419)
-####데이터 전처리####
-
+####CTT 점수산출####
+attach(response)
+CTT<-vector("double",nrow(response))
+for ( i in 1:nrow(response) ){
+CTT[[i]]<-sum(response[i,1:19],na.rm=T)}
+table(CTT)
+hist(CTT)
