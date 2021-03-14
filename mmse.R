@@ -198,11 +198,11 @@ response <-  raw_response %>% filter(!is.na(a401) & !is.na(a402) &!is.na(a403)&!
 
 
 #### CTT 점수산출 ####
-CTT<-vector("double",nrow(response))
+scoreCTT<-vector("double",nrow(response))
 for ( i in 1:nrow(response) ){
-CTT[[i]]<-sum(response[i,1:19],na.rm=T)}
-table(CTT)
-hist(CTT)
+scoreCTT[[i]]<-sum(response[i,1:19],na.rm=T)}
+table(scoreCTT)
+hist(scoreCTT)
 #### PCM 점수산출 ####
 install.packages("mirt")
 library(mirt)
@@ -211,4 +211,38 @@ results.pcm <- mirt(data=response, model=model.pcm, itemtype="Rasch", SE=TRUE, v
 coef.pcm <- coef(results.pcm, IRTpars=TRUE, simplify=TRUE)
 items.pcm <- as.data.frame(coef.pcm$items)
 print(items.pcm)
-     
+plot(results.pcm, type = 'trace', which.items = c(1:19))
+plot(results.pcm, type = 'infotrace', which.items = c(1:19))
+plot(results.pcm, type = 'info', theta_lim = c(-4,4), lwd=2)
+plot(results.pcm, type = 'SE', theta_lim = c(-4,4), lwd=2)
+plot(results.pcm, type = 'score', theta_lim = c(-4,4), lwd=2)
+plot(results.pcm, type = 'itemscore', theta_lim = c(-4,4), lwd=2)
+plot(results.pcm, type = 'rxx', theta_lim = c(-4,4), lwd=2)
+score.PCM<-fscores(results.pcm,method = 'EAP')
+hist(score.PCM)# EAP(default) MAP ML WLE EAPsum
+
+#### GPCM 점수 산출####
+install.packages("mirt")
+library(mirt)
+model.gpcm <- 'F1 = 1-19' 
+results.gpcm <- mirt(data=response, model=model.gpcm, itemtype="gpcm", SE=TRUE, verbose=FALSE)
+coef.gpcm <- coef(results.gpcm, IRTpars=TRUE, simplify=TRUE)
+items.gpcm <- as.data.frame(coef.gpcm$items)
+print(items.gpcm)
+plot(results.gpcm, type = 'trace', which.items = c(1:19))
+plot(results.gpcm, type = 'infotrace', which.items = c(1:19))
+plot(results.gpcm, type = 'info', theta_lim = c(-4,4), lwd=2)
+plot(results.gpcm, type = 'SE', theta_lim = c(-4,4), lwd=2)
+plot(results.gpcm, type = 'score', theta_lim = c(-4,4), lwd=2)
+plot(results.gpcm, type = 'itemscore', theta_lim = c(-4,4), lwd=2)
+plot(results.gpcm, type = 'rxx', theta_lim = c(-4,4), lwd=2)
+score.GPCM<-fscores(results.gpcm,method = 'EAP')
+hist(score.GPCM)# EAP(default) MAP ML WLE EAPsum
+#### CFA 점수산출####
+install.packages("lavaan")
+library(lavaan)
+model.cfa<-'F1=~a401+a402+a403+a404+a405+a406+a407+a408+a409+a410+a411+a412+a413+a414+a415+a416+a417+a418+a419'
+results.cfa<-cfa(model=model.cfa,data = response, ordered = T)
+summary(results.cfa)
+score.CFA<-lavPredict(results.cfa)
+hist(score.CFA)
