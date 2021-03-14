@@ -206,4 +206,9 @@ hist(CTT)
 #### PCM 점수산출 ####
 install.packages("mirt")
 library(mirt)
-mirt(response,"Rasch")
+model.pcm <- 'F1 = 1-19' 
+results.pcm <- mirt(data=response, model=model.pcm, itemtype="Rasch", SE=TRUE, verbose=FALSE)
+coef.pcm <- coef(results.pcm, IRTpars=TRUE, simplify=TRUE)
+items.pcm <- as.data.frame(coef.pcm$items)
+print(items.pcm)
+     
