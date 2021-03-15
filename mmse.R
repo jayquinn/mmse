@@ -196,19 +196,19 @@ table(C419)
 table(a419)
 length(C419);length(a419)
 detach(dat)
-raw_response<-data.frame(a401,a402,a403,a404,a405,a406,a407,a408,a409,a410,a411,a412,a413,a414,a415,a416,a417,a418,a419)
+response.raw<-data.frame(a401,a402,a403,a404,a405,a406,a407,a408,a409,a410,a411,a412,a413,a414,a415,a416,a417,a418,a419)
 
 #모두 NA인 행제거
 #library(dplyr)
-response <-  raw_response %>% filter(!is.na(a401) & !is.na(a402) &!is.na(a403)&!is.na(a404)&!is.na(a405)&!is.na(a406)&!is.na(a407)&!is.na(a408)&!is.na(a409)&!is.na(a410)&!is.na(a411)&!is.na(a412)&!is.na(a413)&!is.na(a414)&!is.na(a415)&!is.na(a416)&!is.na(a417)&!is.na(a418)&!is.na(a419))
-
+response.clean <- response.raw %>% filter(!is.na(a401) & !is.na(a402) &!is.na(a403)&!is.na(a404)&!is.na(a405)&!is.na(a406)&!is.na(a407)&!is.na(a408)&!is.na(a409)&!is.na(a410)&!is.na(a411)&!is.na(a412)&!is.na(a413)&!is.na(a414)&!is.na(a415)&!is.na(a416)&!is.na(a417)&!is.na(a418)&!is.na(a419))
+response<-response.clean
 
 #### CTT 점수산출 ####
-scoreCTT<-vector("double",nrow(response))
+score.CTT<-vector("double",nrow(response))
 for ( i in 1:nrow(response) ){
-scoreCTT[[i]]<-sum(response[i,1:19],na.rm=T)}
-table(scoreCTT)
-hist(scoreCTT)
+score.CTT[[i]]<-sum(response[i,1:19],na.rm=T)}
+table(score.CTT)
+hist(score.CTT)
 #### PCM 점수산출 ####
 #library(mirt)
 model.pcm <- 'F1 = 1-19' 
@@ -216,6 +216,7 @@ results.pcm <- mirt(data=response, model=model.pcm, itemtype="Rasch", SE=TRUE, v
 coef.pcm <- coef(results.pcm, IRTpars=TRUE, simplify=TRUE)
 items.pcm <- as.data.frame(coef.pcm$items)
 print(items.pcm)
+summary(results.pcm)
 plot(results.pcm, type = 'trace', which.items = c(1:19))
 plot(results.pcm, type = 'infotrace', which.items = c(1:19))
 plot(results.pcm, type = 'info', theta_lim = c(-4,4), lwd=2)
@@ -234,6 +235,7 @@ results.gpcm <- mirt(data=response, model=model.gpcm, itemtype="gpcm", SE=TRUE, 
 coef.gpcm <- coef(results.gpcm, IRTpars=TRUE, simplify=TRUE)
 items.gpcm <- as.data.frame(coef.gpcm$items)
 print(items.gpcm)
+summary(results.gpcm)
 plot(results.gpcm, type = 'trace', which.items = c(1:19))
 plot(results.gpcm, type = 'infotrace', which.items = c(1:19))
 plot(results.gpcm, type = 'info', theta_lim = c(-4,4), lwd=2)
@@ -250,3 +252,39 @@ results.cfa<-cfa(model=model.cfa,data = response, ordered = T)
 summary(results.cfa)
 score.CFA<-lavPredict(results.cfa)
 hist(score.CFA)
+#### 각 점수 데이터프레임화 ####
+score.frame<-cbind(score.CTT,score.CFA,score.PCM,score.GPCM)
+colnames(score.frame)<-c("CTT","CFA","PCM","GPCM")
+head(score.frame)
+#CTT 특정점수이하만 남기기
+score.frame.t<-as_tibble(score.frame)
+undercut<-filter(score.frame.t,score.frame<='24')
+head(undercut)
+# 점수별 상관비교 언더컷버전
+attach(undercut)
+cor(CTT,CFA,method="spearman")
+cor(CTT,PCM,method="spearman")
+cor(CTT,GPCM,method="spearman")
+cor(CFA,PCM,method="spearman")
+cor(CFA,GPCM,method="spearman")
+cor(PCM,GPCM,method="spearman")
+cor(CTT,CFA)
+cor(CTT,PCM)
+cor(CTT,GPCM)
+cor(CFA,PCM)
+cor(CFA,GPCM)
+cor(PCM,GPCM)
+detach(undercut)
+#### 각 점수별 상관비교 ####
+cor(score.CTT,score.CFA,method="spearman")
+cor(score.CTT,score.PCM,method="spearman")
+cor(score.CTT,score.GPCM,method="spearman")
+cor(score.CFA,score.PCM,method="spearman")
+cor(score.CFA,score.GPCM,method="spearman")
+cor(score.PCM,score.GPCM,method="spearman")
+cor(score.CTT,score.CFA)
+cor(score.CTT,score.PCM)
+cor(score.CTT,score.GPCM)
+cor(score.CFA,score.PCM)
+cor(score.CFA,score.GPCM)
+cor(score.PCM,score.GPCM)
