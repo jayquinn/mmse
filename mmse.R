@@ -4,7 +4,7 @@ install.packages("lavaan")
 library(dplyr)
 library(mirt)
 library(lavaan)
-
+dat<-read.csv("C:/git/mmse/mmse.csv",header=T,sep=",")
 dat<-read.csv("C:/Users/john/Dropbox/r/mmse.csv",header=T,sep=",")
 dat<-read.csv("C:/Users/mjay8/Dropbox/mmse.csv",header=T,sep=",")
 head(dat)
