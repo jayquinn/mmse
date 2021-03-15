@@ -1,3 +1,10 @@
+install.packages("dplyr")
+install.packages("mirt")
+install.packages("lavaan")
+library(dplyr)
+library(mirt)
+library(lavaan)
+
 dat<-read.csv("C:/Users/john/Dropbox/r/mmse.csv",header=T,sep=",")
 dat<-read.csv("C:/Users/mjay8/Dropbox/mmse.csv",header=T,sep=",")
 head(dat)
@@ -192,8 +199,7 @@ detach(dat)
 raw_response<-data.frame(a401,a402,a403,a404,a405,a406,a407,a408,a409,a410,a411,a412,a413,a414,a415,a416,a417,a418,a419)
 
 #모두 NA인 행제거
-install.packages("dplyr")
-library(dplyr)
+#library(dplyr)
 response <-  raw_response %>% filter(!is.na(a401) & !is.na(a402) &!is.na(a403)&!is.na(a404)&!is.na(a405)&!is.na(a406)&!is.na(a407)&!is.na(a408)&!is.na(a409)&!is.na(a410)&!is.na(a411)&!is.na(a412)&!is.na(a413)&!is.na(a414)&!is.na(a415)&!is.na(a416)&!is.na(a417)&!is.na(a418)&!is.na(a419))
 
 
@@ -204,8 +210,7 @@ scoreCTT[[i]]<-sum(response[i,1:19],na.rm=T)}
 table(scoreCTT)
 hist(scoreCTT)
 #### PCM 점수산출 ####
-install.packages("mirt")
-library(mirt)
+#library(mirt)
 model.pcm <- 'F1 = 1-19' 
 results.pcm <- mirt(data=response, model=model.pcm, itemtype="Rasch", SE=TRUE, verbose=FALSE)
 coef.pcm <- coef(results.pcm, IRTpars=TRUE, simplify=TRUE)
@@ -218,12 +223,12 @@ plot(results.pcm, type = 'SE', theta_lim = c(-4,4), lwd=2)
 plot(results.pcm, type = 'score', theta_lim = c(-4,4), lwd=2)
 plot(results.pcm, type = 'itemscore', theta_lim = c(-4,4), lwd=2)
 plot(results.pcm, type = 'rxx', theta_lim = c(-4,4), lwd=2)
+
 score.PCM<-fscores(results.pcm,method = 'EAP')
 hist(score.PCM)# EAP(default) MAP ML WLE EAPsum
 
 #### GPCM 점수 산출####
-install.packages("mirt")
-library(mirt)
+#library(mirt)
 model.gpcm <- 'F1 = 1-19' 
 results.gpcm <- mirt(data=response, model=model.gpcm, itemtype="gpcm", SE=TRUE, verbose=FALSE)
 coef.gpcm <- coef(results.gpcm, IRTpars=TRUE, simplify=TRUE)
@@ -239,8 +244,7 @@ plot(results.gpcm, type = 'rxx', theta_lim = c(-4,4), lwd=2)
 score.GPCM<-fscores(results.gpcm,method = 'EAP')
 hist(score.GPCM)# EAP(default) MAP ML WLE EAPsum
 #### CFA 점수산출####
-install.packages("lavaan")
-library(lavaan)
+#library(lavaan)
 model.cfa<-'F1=~a401+a402+a403+a404+a405+a406+a407+a408+a409+a410+a411+a412+a413+a414+a415+a416+a417+a418+a419'
 results.cfa<-cfa(model=model.cfa,data = response, ordered = T)
 summary(results.cfa)
