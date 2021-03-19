@@ -260,6 +260,9 @@ head(score.frame)
 score.frame.t<-as_tibble(score.frame)
 undercut<-filter(score.frame.t,score.frame<='24')
 head(undercut)
+##상관그림
+plot(score.frame.t)
+plot(undercut)
 # 점수별 상관비교 언더컷버전
 attach(undercut)
 cor(CTT,CFA,method="spearman")
