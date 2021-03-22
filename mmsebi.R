@@ -132,12 +132,12 @@ table(C419)
 table(a419)
 length(C419);length(a419)
 detach(dat)
-response.raw<-data.frame(a402,a403,a404,a407,a408,a409,a410,a411,a413,a414,a415,a418,a419)
+response.raw.bi<-data.frame(a402,a403,a404,a407,a408,a409,a410,a411,a413,a414,a415,a418,a419)
 
 #모두 NA인 행제거
 #library(dplyr)
-response.clean <- response.raw %>% filter(!is.na(a402) &!is.na(a403)&!is.na(a404)&!is.na(a407)&!is.na(a408)&!is.na(a409)&!is.na(a410)&!is.na(a411)&!is.na(a413)&!is.na(a414)&!is.na(a415)&!is.na(a418)&!is.na(a419))
-response<-response.clean
+response.clean.bi <- response.raw.bi %>% filter(!is.na(a402) &!is.na(a403)&!is.na(a404)&!is.na(a407)&!is.na(a408)&!is.na(a409)&!is.na(a410)&!is.na(a411)&!is.na(a413)&!is.na(a414)&!is.na(a415)&!is.na(a418)&!is.na(a419))
+response<-response.clean.bi
 
 #### CTT 점수산출 ####
 score.CTT<-vector("double",nrow(response))
@@ -198,7 +198,7 @@ score.frame.t<-as_tibble(score.frame)
 #head(undercut)
 ##상관그림
 plot(score.frame.t)
-# 점수별 상관비교 언더컷버전
+# 점수별 상관비교
 attach(score.frame.t)
 cor(CTT,CFA,method="spearman")
 cor(CTT,rasch,method="spearman")
@@ -213,16 +213,3 @@ cor(CFA,rasch)
 cor(CFA,twopl)
 cor(rasch,twopl)
 detach(score.frame.t)
-#### 각 점수별 상관비교 ####
-cor(score.CTT,score.CFA,method="kendall")
-cor(score.CTT,score.rasch,method="kendall")
-cor(score.CTT,score.2pl,method="kendall")
-cor(score.CFA,score.rasch,method="kendall")
-cor(score.CFA,score.2pl,method="kendall")
-cor(score.rasch,score.2pl,method="kendall")
-cor(score.CTT,score.CFA)
-cor(score.CTT,score.rasch)
-cor(score.CTT,score.2pl)
-cor(score.CFA,score.rasch)
-cor(score.CFA,score.2pl)
-cor(score.rasch,score.2pl)
