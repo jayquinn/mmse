@@ -248,7 +248,7 @@ hist(score.GPCM)# EAP(default) MAP ML WLE EAPsum
 #### CFA 점수산출####
 #library(lavaan)
 model.cfa<-'F1=~a401+a402+a403+a404+a405+a406+a407+a408+a409+a410+a411+a412+a413+a414+a415+a416+a417+a418+a419'
-results.cfa<-cfa(model=model.cfa,data = response, ordered = T)
+results.cfa<-cfa(model=model.cfa,data = response)
 summary(results.cfa)
 score.CFA<-lavPredict(results.cfa)
 hist(score.CFA)
@@ -257,12 +257,8 @@ score.frame<-cbind(score.CTT,score.CFA,score.PCM,score.GPCM)
 colnames(score.frame)<-c("CTT","CFA","PCM","GPCM")
 head(score.frame)
 score.frame.t<-as_tibble(score.frame)
-#CTT 특정점수이하만 남기기
-#undercut<-filter(score.frame.t,score.frame<='24')
-#head(undercut)
 ##상관그림
 plot(score.frame.t)
-#plot(undercut)
 # 점수별 상관비교
 attach(score.frame.t)
 cor(CTT,CFA,method="spearman")
@@ -278,3 +274,27 @@ cor(CFA,PCM)
 cor(CFA,GPCM)
 cor(PCM,GPCM)
 detach(score.frame.t)
+
+
+#### 특정점수 이하 분석 ####
+#CTT 특정점수이하만 남기기
+undercut<-filter(score.frame.t,CTT<35)
+head(undercut)
+nrow(undercut)
+#상관비교
+attach(undercut)
+cor(CTT,CFA,method="spearman")
+cor(CTT,PCM,method="spearman")
+cor(CTT,GPCM,method="spearman")
+cor(CFA,PCM,method="spearman")
+cor(CFA,GPCM,method="spearman")
+cor(PCM,GPCM,method="spearman")
+cor(CTT,CFA)
+cor(CTT,PCM)
+cor(CTT,GPCM)
+cor(CFA,PCM)
+cor(CFA,GPCM)
+cor(PCM,GPCM)
+detach(undercut)
+plot(undercut)
+
