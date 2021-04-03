@@ -298,3 +298,58 @@ cor(PCM,GPCM)
 detach(undercut)
 plot(undercut)
 
+
+#### Qunatile 10% ####
+attach(score.frame.t)
+quantile(CTT,probs=seq(0,1,0.005))
+qtcut_CTT <- filter(score.frame.t,CTT<18)
+quantile(PCM,probs=seq(0,1,0.0125))
+qtcut_PCM <- filter(score.frame.t,PCM<(-2.28))
+quantile(GPCM,probs=seq(0,1,0.0125))
+qtcut_GPCM <- filter(score.frame.t,GPCM<(-1.15))
+quantile(CFA,probs=seq(0,1,0.0125))
+qtcut_CFA <- filter(score.frame.t,CFA<(-0.61))
+nrow(qtcut_CTT)
+nrow(qtcut_CFA)
+nrow(qtcut_PCM)
+nrow(qtcut_GPCM)
+#이 사람들이 같은 사람들이냐?
+filter(qtcut_PCM,CTT>17)
+filter(qtcut_GPCM,CTT>17)
+filter(qtcut_CFA,CTT>17)
+detach(score.frame.t)
+#### Standard deviation 1.5sd ####
+attach(score.frame.t)
+mean(CTT) - (sd(CTT)*1.5)  # 6 * 1.5 = 9 -> 26-9 = 17부터 치매
+mean(PCM) - sd(PCM)*1.5 # 1.87 * 1.5 = 2.8 -> 0.05 - 2.8 = -2.75 부터 치매 
+mean(GPCM) - sd(GPCM)*1.5 # 0.91 * 1.5 = 1.37 -> 0 - 1.37 = -1.37 부터 치매 
+mean(CFA) - sd(CFA)*1.5 # 0.46 * 1.5 = 0.69 -> 0 - 0.69 = -0.69 부터 치매
+sdcut_CTT<-filter(score.frame.t,CTT<=17)
+sdcut_CFA<-filter(score.frame.t,CFA<=(-0.69))
+sdcut_PCM<-filter(score.frame.t,PCM<=(-2.75))
+sdcut_GPCM<-filter(score.frame.t,GPCM<(-1.37))
+nrow(sdcut_CTT)
+nrow(sdcut_CFA)
+nrow(sdcut_PCM)
+nrow(sdcut_GPCM)
+filter(sdcut_PCM,CTT>=15)
+filter(sdcut_GPCM,CTT>=16)
+filter(sdcut_CFA,CTT>=18)
+detach(score.frame.t)
+#### 시각화 ####
+# 중심화
+score.frame.t
+v.score<-scale(score.frame.t,scale=T)
+v.score<-as_tibble(v.score)
+attach(v.score)
+x_range=seq(-5,2,by=0.5)
+y_max=2000
+hist_CTT<-hist(CTT, breaks=x_range, plot = FALSE)
+hist_CFA<-hist(CFA, breaks=x_range, plot = FALSE)
+hist_PCM<-hist(PCM, breaks=x_range, plot = FALSE)
+hist_GPCM<-hist(GPCM, breaks=x_range, plot = FALSE)
+plot(hist_CTT, col=adjustcolor("red",alpha=0.5),ann=FALSE,axes=FALSE,ylim=c(0,y_max))
+plot(hist_CFA,col=adjustcolor("green",alpha=0.5), add = TRUE)
+plot(hist_PCM,col=adjustcolor("blue",alpha=0.5), add = TRUE)
+plot(hist_GPCM,col=adjustcolor("yellow",alpha=0.5), add = TRUE)
+detach(v.score)
