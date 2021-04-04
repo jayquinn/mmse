@@ -133,7 +133,7 @@ table(a419)
 length(C419);length(a419)
 detach(dat)
 response.raw<-data.frame(a402,a403,a404,a407,a408,a409,a410,a411,a413,a414,a415,a418,a419)
-
+1 5 6 12 16 17
 #모두 NA인 행제거
 #library(dplyr)
 response.clean <- response.raw %>% filter(!is.na(a402) &!is.na(a403)&!is.na(a404)&!is.na(a407)&!is.na(a408)&!is.na(a409)&!is.na(a410)&!is.na(a411)&!is.na(a413)&!is.na(a414)&!is.na(a415)&!is.na(a418)&!is.na(a419))
