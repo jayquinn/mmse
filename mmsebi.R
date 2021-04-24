@@ -132,12 +132,17 @@ table(C419)
 table(a419)
 length(C419);length(a419)
 detach(dat)
+<<<<<<< HEAD
 response.raw<-data.frame(a402,a403,a404,a407,a408,a409,a410,a411,a413,a414,a415,a418,a419)
 1 5 6 12 16 17
+=======
+response.raw.bi<-data.frame(a402,a403,a404,a407,a408,a409,a410,a411,a413,a414,a415,a418,a419)
+
+>>>>>>> ed36bd550fdfc183b1efd637f83e2237b961e208
 #모두 NA인 행제거
 #library(dplyr)
-response.clean <- response.raw %>% filter(!is.na(a402) &!is.na(a403)&!is.na(a404)&!is.na(a407)&!is.na(a408)&!is.na(a409)&!is.na(a410)&!is.na(a411)&!is.na(a413)&!is.na(a414)&!is.na(a415)&!is.na(a418)&!is.na(a419))
-response<-response.clean
+response.clean.bi <- response.raw.bi %>% filter(!is.na(a402) &!is.na(a403)&!is.na(a404)&!is.na(a407)&!is.na(a408)&!is.na(a409)&!is.na(a410)&!is.na(a411)&!is.na(a413)&!is.na(a414)&!is.na(a415)&!is.na(a418)&!is.na(a419))
+response<-response.clean.bi
 
 #### CTT 점수산출 ####
 score.CTT<-vector("double",nrow(response))
@@ -145,42 +150,42 @@ for ( i in 1:nrow(response) ){
   score.CTT[[i]]<-sum(response[i,1:13],na.rm=T)}
 table(score.CTT)
 hist(score.CTT)
-#### PCM 점수산출 ####
+#### Rasch 점수산출 ####
 #library(mirt)
-model.pcm <- 'F1 = 1-13' 
-results.pcm <- mirt(data=response, model=model.pcm, itemtype="Rasch", SE=TRUE, verbose=FALSE)
-coef.pcm <- coef(results.pcm, IRTpars=TRUE, simplify=TRUE)
-items.pcm <- as.data.frame(coef.pcm$items)
-print(items.pcm)
-summary(results.pcm)
-plot(results.pcm, type = 'trace', which.items = c(1:13))
-plot(results.pcm, type = 'infotrace', which.items = c(1:13))
-plot(results.pcm, type = 'info', theta_lim = c(-4,4), lwd=2)
-plot(results.pcm, type = 'SE', theta_lim = c(-4,4), lwd=2)
-plot(results.pcm, type = 'score', theta_lim = c(-4,4), lwd=2)
-plot(results.pcm, type = 'itemscore', theta_lim = c(-4,4), lwd=2)
-plot(results.pcm, type = 'rxx', theta_lim = c(-4,4), lwd=2)
+model.rasch <- 'F1 = 1-13' 
+results.rasch <- mirt(data=response, model=model.rasch, itemtype="Rasch", SE=TRUE, verbose=FALSE)
+coef.rasch <- coef(results.rasch, IRTpars=TRUE, simplify=TRUE)
+items.rasch <- as.data.frame(coef.rasch$items)
+print(items.rasch)
+summary(results.rasch)
+plot(results.rasch, type = 'trace', which.items = c(1:13))
+plot(results.rasch, type = 'infotrace', which.items = c(1:13))
+plot(results.rasch, type = 'info', theta_lim = c(-4,4), lwd=2)
+plot(results.rasch, type = 'SE', theta_lim = c(-4,4), lwd=2)
+plot(results.rasch, type = 'score', theta_lim = c(-4,4), lwd=2)
+plot(results.rasch, type = 'itemscore', theta_lim = c(-4,4), lwd=2)
+plot(results.rasch, type = 'rxx', theta_lim = c(-4,4), lwd=2)
 
-score.PCM<-fscores(results.pcm,method = 'EAP')
-hist(score.PCM)# EAP(default) MAP ML WLE EAPsum
+score.rasch<-fscores(results.rasch,method = 'EAP')
+hist(score.rasch)# EAP(default) MAP ML WLE EAPsum
 
-#### GPCM 점수 산출####
+#### 2pl 점수산출####
 #library(mirt)
-model.gpcm <- 'F1 = 1-13' 
-results.gpcm <- mirt(data=response, model=model.gpcm, itemtype="2PL", SE=TRUE, verbose=FALSE)
-coef.gpcm <- coef(results.gpcm, IRTpars=TRUE, simplify=TRUE)
-items.gpcm <- as.data.frame(coef.gpcm$items)
-print(items.gpcm)
-summary(results.gpcm)
-plot(results.gpcm, type = 'trace', which.items = c(1:13))
-plot(results.gpcm, type = 'infotrace', which.items = c(1:13))
-plot(results.gpcm, type = 'info', theta_lim = c(-4,4), lwd=2)
-plot(results.gpcm, type = 'SE', theta_lim = c(-4,4), lwd=2)
-plot(results.gpcm, type = 'score', theta_lim = c(-4,4), lwd=2)
-plot(results.gpcm, type = 'itemscore', theta_lim = c(-4,4), lwd=2)
-plot(results.gpcm, type = 'rxx', theta_lim = c(-4,4), lwd=2)
-score.GPCM<-fscores(results.gpcm,method = 'EAP')
-hist(score.GPCM)# EAP(default) MAP ML WLE EAPsum
+model.2pl <- 'F1 = 1-13' 
+results.2pl <- mirt(data=response, model=model.2pl, itemtype="2PL", SE=TRUE, verbose=FALSE)
+coef.2pl <- coef(results.2pl, IRTpars=TRUE, simplify=TRUE)
+items.2pl <- as.data.frame(coef.2pl$items)
+print(items.2pl)
+summary(results.2pl)
+plot(results.2pl, type = 'trace', which.items = c(1:13))
+plot(results.2pl, type = 'infotrace', which.items = c(1:13))
+plot(results.2pl, type = 'info', theta_lim = c(-4,4), lwd=2)
+plot(results.2pl, type = 'SE', theta_lim = c(-4,4), lwd=2)
+plot(results.2pl, type = 'score', theta_lim = c(-4,4), lwd=2)
+plot(results.2pl, type = 'itemscore', theta_lim = c(-4,4), lwd=2)
+plot(results.2pl, type = 'rxx', theta_lim = c(-4,4), lwd=2)
+score.2pl<-fscores(results.2pl,method = 'EAP')
+hist(score.2pl)# EAP(default) MAP ML WLE EAPsum
 #### CFA 점수산출####
 #library(lavaan)
 model.cfa<-'F1=~+a402+a403+a404+a407+a408+a409+a410+a411+a413+a414+a415+a418+a419'
@@ -189,41 +194,27 @@ summary(results.cfa)
 score.CFA<-lavPredict(results.cfa)
 hist(score.CFA)
 #### 각 점수 데이터프레임화 ####
-score.frame<-cbind(score.CTT,score.CFA,score.PCM,score.GPCM)
-colnames(score.frame)<-c("CTT","CFA","PCM","GPCM")
+score.frame<-cbind(score.CTT,score.CFA,score.rasch,score.2pl)
+colnames(score.frame)<-c("CTT","CFA","rasch","twopl")
 head(score.frame)
+score.frame.t<-as_tibble(score.frame)
 #CTT 특정점수이하만 남기기
-#score.frame.t<-as_tibble(score.frame)
 #undercut<-filter(score.frame.t,score.frame<='24')
 #head(undercut)
-# 점수별 상관비교 언더컷버전
-attach(score.frame)
+##상관그림
+plot(score.frame.t)
+# 점수별 상관비교
+attach(score.frame.t)
 cor(CTT,CFA,method="spearman")
-cor(CTT,PCM,method="spearman")
-cor(CTT,GPCM,method="spearman")
-cor(CFA,PCM,method="spearman")
-cor(CFA,GPCM,method="spearman")
-cor(PCM,GPCM,method="spearman")
+cor(CTT,rasch,method="spearman")
+cor(CTT,twopl,method="spearman")
+cor(CFA,rasch,method="spearman")
+cor(CFA,twopl,method="spearman")
+cor(rasch,twopl,method="spearman")
 cor(CTT,CFA)
-cor(CTT,PCM)
-cor(CTT,GPCM)
-cor(CFA,PCM)
-cor(CFA,GPCM)
-cor(PCM,GPCM)
-detach(undercut)
-#### 각 점수별 상관비교 ####
-cor(score.CTT,score.CFA,method="kendall")
-cor(score.CTT,score.PCM,method="kendall")
-cor(score.CTT,score.GPCM,method="kendall")
-cor(score.CFA,score.PCM,method="kendall")
-cor(score.CFA,score.GPCM,method="kendall")
-cor(score.PCM,score.GPCM,method="kendall")
-cor(score.CTT,score.CFA)
-cor(score.CTT,score.PCM)
-cor(score.CTT,score.GPCM)
-cor(score.CFA,score.PCM)
-cor(score.CFA,score.GPCM)
-cor(score.PCM,score.GPCM)
-tetrachoric(score.CTT,score.CFA)
-
-### 하다 말았음 신뢰하지 말 것
+cor(CTT,rasch)
+cor(CTT,twopl)
+cor(CFA,rasch)
+cor(CFA,twopl)
+cor(rasch,twopl)
+detach(score.frame.t)

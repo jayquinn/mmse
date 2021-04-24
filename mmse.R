@@ -5,8 +5,6 @@ library(dplyr)
 library(mirt)
 library(lavaan)
 dat<-read.csv("C:/git/mmse/mmse.csv",header=T,sep=",")
-dat<-read.csv("C:/Users/john/Dropbox/r/mmse.csv",header=T,sep=",")
-dat<-read.csv("C:/Users/mjay8/Dropbox/mmse.csv",header=T,sep=",")
 head(dat)
 #### 데이터 전처리 ####
 attach(dat)
@@ -195,10 +193,13 @@ table(C419,a419,useNA='always')
 table(C419)
 table(a419)
 length(C419);length(a419)
+#진단정보(diag) 추가
+table(diag)
 detach(dat)
-response.raw<-data.frame(a401,a402,a403,a404,a405,a406,a407,a408,a409,a410,a411,a412,a413,a414,a415,a416,a417,a418,a419)
+response.raw<-data.frame(a401,a402,a403,a404,a405,a406,a407,a408,a409,a410,a411,a412,a413,a414,a415,a416,a417,a418,a419,diag)
 
-#모두 NA인 행제거
+
+#검사 응답이 모두 NA인 행제거
 #library(dplyr)
 response.clean <- response.raw %>% filter(!is.na(a401) & !is.na(a402) &!is.na(a403)&!is.na(a404)&!is.na(a405)&!is.na(a406)&!is.na(a407)&!is.na(a408)&!is.na(a409)&!is.na(a410)&!is.na(a411)&!is.na(a412)&!is.na(a413)&!is.na(a414)&!is.na(a415)&!is.na(a416)&!is.na(a417)&!is.na(a418)&!is.na(a419))
 response<-response.clean
@@ -248,7 +249,7 @@ hist(score.GPCM)# EAP(default) MAP ML WLE EAPsum
 #### CFA 점수산출####
 #library(lavaan)
 model.cfa<-'F1=~a401+a402+a403+a404+a405+a406+a407+a408+a409+a410+a411+a412+a413+a414+a415+a416+a417+a418+a419'
-results.cfa<-cfa(model=model.cfa,data = response, ordered = T)
+results.cfa<-cfa(model=model.cfa,data = response)
 summary(results.cfa)
 score.CFA<-lavPredict(results.cfa)
 hist(score.CFA)
@@ -256,11 +257,32 @@ hist(score.CFA)
 score.frame<-cbind(score.CTT,score.CFA,score.PCM,score.GPCM)
 colnames(score.frame)<-c("CTT","CFA","PCM","GPCM")
 head(score.frame)
-#CTT 특정점수이하만 남기기
 score.frame.t<-as_tibble(score.frame)
-undercut<-filter(score.frame.t,score.frame<='24')
+##상관그림
+plot(score.frame.t)
+# 점수별 상관비교
+attach(score.frame.t)
+cor(CTT,CFA,method="spearman")
+cor(CTT,PCM,method="spearman")
+cor(CTT,GPCM,method="spearman")
+cor(CFA,PCM,method="spearman")
+cor(CFA,GPCM,method="spearman")
+cor(PCM,GPCM,method="spearman")
+cor(CTT,CFA)
+cor(CTT,PCM)
+cor(CTT,GPCM)
+cor(CFA,PCM)
+cor(CFA,GPCM)
+cor(PCM,GPCM)
+detach(score.frame.t)
+
+
+#### 특정점수 이하 분석 ####
+#CTT 특정점수이하만 남기기
+undercut<-filter(score.frame.t,CTT<35)
 head(undercut)
-# 점수별 상관비교 언더컷버전
+nrow(undercut)
+#상관비교
 attach(undercut)
 cor(CTT,CFA,method="spearman")
 cor(CTT,PCM,method="spearman")
@@ -275,16 +297,60 @@ cor(CFA,PCM)
 cor(CFA,GPCM)
 cor(PCM,GPCM)
 detach(undercut)
-#### 각 점수별 상관비교 ####
-cor(score.CTT,score.CFA,method="spearman")
-cor(score.CTT,score.PCM,method="spearman")
-cor(score.CTT,score.GPCM,method="spearman")
-cor(score.CFA,score.PCM,method="spearman")
-cor(score.CFA,score.GPCM,method="spearman")
-cor(score.PCM,score.GPCM,method="spearman")
-cor(score.CTT,score.CFA)
-cor(score.CTT,score.PCM)
-cor(score.CTT,score.GPCM)
-cor(score.CFA,score.PCM)
-cor(score.CFA,score.GPCM)
-cor(score.PCM,score.GPCM)
+plot(undercut)
+
+
+#### Qunatile 10% ####
+attach(score.frame.t)
+quantile(CTT,probs=seq(0,1,0.005))
+qtcut_CTT <- filter(score.frame.t,CTT<18)
+quantile(PCM,probs=seq(0,1,0.0125))
+qtcut_PCM <- filter(score.frame.t,PCM<(-2.28))
+quantile(GPCM,probs=seq(0,1,0.0125))
+qtcut_GPCM <- filter(score.frame.t,GPCM<(-1.15))
+quantile(CFA,probs=seq(0,1,0.0125))
+qtcut_CFA <- filter(score.frame.t,CFA<(-0.61))
+nrow(qtcut_CTT)
+nrow(qtcut_CFA)
+nrow(qtcut_PCM)
+nrow(qtcut_GPCM)
+#이 사람들이 같은 사람들이냐?
+filter(qtcut_PCM,CTT>17)
+filter(qtcut_GPCM,CTT>17)
+filter(qtcut_CFA,CTT>17)
+detach(score.frame.t)
+#### Standard deviation 1.5sd ####
+attach(score.frame.t)
+mean(CTT) - (sd(CTT)*1.5)  # 6 * 1.5 = 9 -> 26-9 = 17부터 치매
+mean(PCM) - sd(PCM)*1.5 # 1.87 * 1.5 = 2.8 -> 0.05 - 2.8 = -2.75 부터 치매 
+mean(GPCM) - sd(GPCM)*1.5 # 0.91 * 1.5 = 1.37 -> 0 - 1.37 = -1.37 부터 치매 
+mean(CFA) - sd(CFA)*1.5 # 0.46 * 1.5 = 0.69 -> 0 - 0.69 = -0.69 부터 치매
+sdcut_CTT<-filter(score.frame.t,CTT<=17)
+sdcut_CFA<-filter(score.frame.t,CFA<=(-0.69))
+sdcut_PCM<-filter(score.frame.t,PCM<=(-2.75))
+sdcut_GPCM<-filter(score.frame.t,GPCM<(-1.37))
+nrow(sdcut_CTT)
+nrow(sdcut_CFA)
+nrow(sdcut_PCM)
+nrow(sdcut_GPCM)
+filter(sdcut_PCM,CTT>=15)
+filter(sdcut_GPCM,CTT>=16)
+filter(sdcut_CFA,CTT>=18)
+detach(score.frame.t)
+#### 시각화 ####
+# 중심화
+score.frame.t
+v.score<-scale(score.frame.t,scale=T)
+v.score<-as_tibble(v.score)
+attach(v.score)
+x_range=seq(-5,2,by=0.5)
+y_max=2000
+hist_CTT<-hist(CTT, breaks=x_range, plot = FALSE)
+hist_CFA<-hist(CFA, breaks=x_range, plot = FALSE)
+hist_PCM<-hist(PCM, breaks=x_range, plot = FALSE)
+hist_GPCM<-hist(GPCM, breaks=x_range, plot = FALSE)
+plot(hist_CTT, col=adjustcolor("red",alpha=0.5),ann=FALSE,axes=FALSE,ylim=c(0,y_max))
+plot(hist_CFA,col=adjustcolor("green",alpha=0.5), add = TRUE)
+plot(hist_PCM,col=adjustcolor("blue",alpha=0.5), add = TRUE)
+plot(hist_GPCM,col=adjustcolor("yellow",alpha=0.5), add = TRUE)
+detach(v.score)
