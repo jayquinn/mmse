@@ -4,6 +4,7 @@ install.packages("lavaan")
 library(dplyr)
 library(mirt)
 library(lavaan)
+library(Epi)
 dat<-read.csv("C:/git/mmse/mmse.csv",header=T,sep=",")
 head(dat)
 #### 데이터 전처리 ####
@@ -193,18 +194,23 @@ table(C419,a419,useNA='always')
 table(C419)
 table(a419)
 length(C419);length(a419)
+detach(dat)
 #진단정보(diag) 추가
 attach(dat)
-print(diag)
-response.raw<-data.frame(a401,a402,a403,a404,a405,a406,a407,a408,a409,a410,a411,a412,a413,a414,a415,a416,a417,a418,a419,diag)
+response.raw<-data.frame(a401,a402,a403,a404,a405,a406,a407,a408,a409,a410,a411,a412,a413,a414,a415,a416,a417,a418,a419,dat$diag)
 detach(dat)
-
+#### 진단정보(diag)  1 치매, 3경도인지장애, 5 정상
+#### 진단정보 치매 + 경도인지장애 합치기
+response.raw$diag<-ifelse(dat$diag==5,1,
+             ifelse(dat$diag==3,0,
+                    ifelse(dat$diag==1,0,dat$diag)))
+table(response.raw$diag)
+head(response.raw$diag)
 #검사 응답이 모두 NA인 행제거
-#library(dplyr)
 response.clean <- response.raw %>% filter(!is.na(a401) & !is.na(a402) &!is.na(a403)&!is.na(a404)&!is.na(a405)&!is.na(a406)&!is.na(a407)&!is.na(a408)&!is.na(a409)&!is.na(a410)&!is.na(a411)&!is.na(a412)&!is.na(a413)&!is.na(a414)&!is.na(a415)&!is.na(a416)&!is.na(a417)&!is.na(a418)&!is.na(a419))
 response<-response.clean
 #검사응답이 모두 NA인 행을 제거한 진단정보(diag)
-clean.diag<-response[,20]
+clean.diag<-response[,21] #이거 진단 넘버 잘봐야함 !!!!!!! 20은 진땡 21은 수정한 것
 #진단정보(diag)제외한 검사세트 찐클린
 response<-response[,1:19]
 #### CTT 점수산출 ####
@@ -256,7 +262,10 @@ results.cfa<-cfa(model=model.cfa,data = response)
 summary(results.cfa)
 score.CFA<-lavPredict(results.cfa)
 hist(score.CFA)
+
+######################################################################################
 #### 각 점수 데이터프레임화 ####
+######################################################################################
 score.frame<-cbind(score.CTT,score.CFA,score.PCM,score.GPCM)
 colnames(score.frame)<-c("CTT","CFA","PCM","GPCM")
 head(score.frame)
@@ -333,6 +342,8 @@ mean(CTT) - (sd(CTT)*1.5)  # 6 * 1.5 = 9 -> 26-9 = 17부터 치매
 mean(PCM) - sd(PCM)*1.5 # 1.87 * 1.5 = 2.8 -> 0.05 - 2.8 = -2.75 부터 치매 
 mean(GPCM) - sd(GPCM)*1.5 # 0.91 * 1.5 = 1.37 -> 0 - 1.37 = -1.37 부터 치매 
 mean(CFA) - sd(CFA)*1.5 # 0.46 * 1.5 = 0.69 -> 0 - 0.69 = -0.69 부터 치매
+
+
 sdcut_CTT<-filter(score.frame.t,CTT<=17)
 sdcut_CFA<-filter(score.frame.t,CFA<=(-0.69))
 sdcut_PCM<-filter(score.frame.t,PCM<=(-2.75))
@@ -361,19 +372,3 @@ plot(hist_CFA,col=adjustcolor("green",alpha=0.5), add = TRUE)
 plot(hist_PCM,col=adjustcolor("blue",alpha=0.5), add = TRUE)
 plot(hist_GPCM,col=adjustcolor("yellow",alpha=0.5), add = TRUE)
 detach(v.score)
-
-#### 힛트다 힛트 CTT ####
-# 17이하 치매의심, 18이상 23이하 인지기능 저하, 24이상 정상
-attach(scoreframe) #도합 6548
-CTT_a<-filter(scoreframe,CTT>=24&diag==5) #4843
-CTT_b<-filter(scoreframe,CTT>=24&diag<=3) #9
-CTT_c<-filter(scoreframe,CTT<=23&diag==5) #1620
-CTT_d<-filter(scoreframe,CTT<=23&diag<=3) #76 도합 6548
-CTT_FPR<-(nrow(CTT_c)/(nrow(CTT_a)+nrow(CTT_c)))
-CTT_FNR<-(nrow(CTT_b)/(nrow(CTT_b)+nrow(CTT_d))) 
-CTT_sens<-(nrow(CTT_d)/(nrow(CTT_b)+nrow(CTT_d)))
-CTT_spec<-(nrow(CTT_a)/(nrow(CTT_a)+nrow(CTT_c)))
-CTT_PPP<-(nrow(CTT_d)/(nrow(CTT_d)+nrow(CTT_c)))
-CTT_NPP<-(nrow(CTT_a)/(nrow(CTT_a)+nrow(CTT_b)))
-CTT_PCO<-((nrow(CTT_a)+nrow(CTT_b))/(nrow(scoreframe)))
-CTT_Md<-sqrt((1-CTT_sens)^2+(1-CTT_spec)^2)
