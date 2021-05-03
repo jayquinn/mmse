@@ -1,7 +1,7 @@
 #### 힛트다 힛트 CTT ####
 # 17이하 치매의심, 18이상 23이하 인지기능 저하, 24이상 정상
 #install.packages("Epi")
-#library(Epi)
+library(Epi)
 attach(scoreframe)
 detach(scoreframe)#도합 6548
 CTT_a<-filter(scoreframe,CTT>=24&diag==5) #4843
@@ -34,24 +34,3 @@ siba$res$`scoreframe$CTT`[opt]
 siba2$res$`round(scoreframe$CFA, 2)`[opt2]
 siba3$res$`round(scoreframe$PCM, 2)`[opt3]
 siba4$res$`round(scoreframe$GPCM, 2)`[opt4]
-
-
-install.packages("ROCit")
-library(ROCit)
-ROCit_obj <- rocit(score=scoreframe$PCM,class=scoreframe$diag)
-plot(ROCit_obj)
-
-go<-measureit(scoreframe$CTT,scoreframe$diag)
-
-
-#0  0.9975244 0.09411765
-
-install.packages("pROC")
-library(pROC)
-pROC_obj <- roc(scoreframe$diag,scoreframe$CTT,
-                smoothed = TRUE,
-                # arguments for ci
-                ci=TRUE, ci.alpha=0.9, stratified=FALSE,
-                # arguments for plot
-                plot=TRUE, auc.polygon=TRUE, max.auc.polygon=TRUE, grid=TRUE,
-                print.auc=TRUE, show.thres=TRUE)

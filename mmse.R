@@ -203,9 +203,10 @@ detach(dat)
 #### 진단정보 치매 + 경도인지장애 합치기
 response.raw$diag<-ifelse(dat$diag==5,1,
              ifelse(dat$diag==3,0,
-                    ifelse(dat$diag==1,0,dat$diag)))
+                    ifelse(dat$diag==1,0,dat$diag))) #정상 1, 경도인지+치매 0
 table(response.raw$diag)
 head(response.raw$diag)
+print(diag)
 #검사 응답이 모두 NA인 행제거
 response.clean <- response.raw %>% filter(!is.na(a401) & !is.na(a402) &!is.na(a403)&!is.na(a404)&!is.na(a405)&!is.na(a406)&!is.na(a407)&!is.na(a408)&!is.na(a409)&!is.na(a410)&!is.na(a411)&!is.na(a412)&!is.na(a413)&!is.na(a414)&!is.na(a415)&!is.na(a416)&!is.na(a417)&!is.na(a418)&!is.na(a419))
 response<-response.clean
@@ -372,3 +373,19 @@ plot(hist_CFA,col=adjustcolor("green",alpha=0.5), add = TRUE)
 plot(hist_PCM,col=adjustcolor("blue",alpha=0.5), add = TRUE)
 plot(hist_GPCM,col=adjustcolor("yellow",alpha=0.5), add = TRUE)
 detach(v.score)
+
+#### 힛트다 힛트 CTT ####
+# 17이하 치매의심, 18이상 23이하 인지기능 저하, 24이상 정상
+attach(scoreframe) #도합 6548
+CTT_a<-filter(scoreframe,CTT>=24&diag==5) #4843
+CTT_b<-filter(scoreframe,CTT>=24&diag<=3) #9
+CTT_c<-filter(scoreframe,CTT<=23&diag==5) #1620
+CTT_d<-filter(scoreframe,CTT<=23&diag<=3) #76 도합 6548
+CTT_FPR<-(nrow(CTT_c)/(nrow(CTT_a)+nrow(CTT_c)))
+CTT_FNR<-(nrow(CTT_b)/(nrow(CTT_b)+nrow(CTT_d))) 
+CTT_sens<-(nrow(CTT_d)/(nrow(CTT_b)+nrow(CTT_d)))
+CTT_spec<-(nrow(CTT_a)/(nrow(CTT_a)+nrow(CTT_c)))
+CTT_PPP<-(nrow(CTT_d)/(nrow(CTT_d)+nrow(CTT_c)))
+CTT_NPP<-(nrow(CTT_a)/(nrow(CTT_a)+nrow(CTT_b)))
+CTT_PCO<-((nrow(CTT_a)+nrow(CTT_b))/(nrow(scoreframe)))
+CTT_Md<-sqrt((1-CTT_sens)^2+(1-CTT_spec)^2)
