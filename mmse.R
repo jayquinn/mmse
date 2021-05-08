@@ -203,7 +203,7 @@ detach(dat)
 #### 진단정보 치매 + 경도인지장애 합치기
 response.raw$diag<-ifelse(dat$diag==5,1,
              ifelse(dat$diag==3,0,
-                    ifelse(dat$diag==1,0,dat$diag))) #정상 1, 경도인지+치매 0
+                    ifelse(dat$diag==1,0,dat$diag))) #정상, 경도인지+치매 0
 table(response.raw$diag)
 head(response.raw$diag)
 print(diag)
@@ -389,3 +389,4 @@ CTT_PPP<-(nrow(CTT_d)/(nrow(CTT_d)+nrow(CTT_c)))
 CTT_NPP<-(nrow(CTT_a)/(nrow(CTT_a)+nrow(CTT_b)))
 CTT_PCO<-((nrow(CTT_a)+nrow(CTT_b))/(nrow(scoreframe)))
 CTT_Md<-sqrt((1-CTT_sens)^2+(1-CTT_spec)^2)
+
