@@ -4,10 +4,12 @@
 library(Epi)
 attach(scoreframe)
 detach(scoreframe)#도합 6548
-CTT_a<-filter(scoreframe,CTT>=24&diag==5) #4843
-CTT_b<-filter(scoreframe,CTT>=24&diag<=3) #9
-CTT_c<-filter(scoreframe,CTT<=23&diag==5) #1620
-CTT_d<-filter(scoreframe,CTT<=23&diag<=3) #76 도합 6548
+#### 진단정보(diag)  1 치매, 3경도인지장애, 5 정상
+#### 진단정보(diag) -> 5 -> 1, 1,3 -> 0
+CTT_a<-filter(scoreframe,CTT>=24&diag==1) #4843
+CTT_b<-filter(scoreframe,CTT>=24&diag==0) #9
+CTT_c<-filter(scoreframe,CTT<=23&diag==1) #1620
+CTT_d<-filter(scoreframe,CTT<=23&diag==0) #76 도합 6548
 CTT_FPR<-(nrow(CTT_c)/(nrow(CTT_a)+nrow(CTT_c)))
 CTT_FNR<-(nrow(CTT_b)/(nrow(CTT_b)+nrow(CTT_d))) 
 CTT_sens<-(nrow(CTT_d)/(nrow(CTT_b)+nrow(CTT_d)))
@@ -16,8 +18,6 @@ CTT_PPP<-(nrow(CTT_d)/(nrow(CTT_d)+nrow(CTT_c)))
 CTT_NPP<-(nrow(CTT_a)/(nrow(CTT_a)+nrow(CTT_b)))
 CTT_PCO<-((nrow(CTT_a)+nrow(CTT_b))/(nrow(scoreframe)))
 CTT_Md<-sqrt((1-CTT_sens)^2+(1-CTT_spec)^2)
-
-sipal<-cbind(CTT_sens,CTT_spec)
 
 library(Epi)
 
