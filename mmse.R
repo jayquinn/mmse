@@ -202,8 +202,8 @@ detach(dat)
 #### 진단정보(diag)  1 치매, 3경도인지장애, 5 정상
 #### 진단정보 치매 + 경도인지장애 합치기
 response.raw$diag<-ifelse(dat$diag==5,1,
-             ifelse(dat$diag==3,0,
-                    ifelse(dat$diag==1,0,dat$diag))) #정상, 경도인지+치매 0
+             ifelse(dat$diag==3,1,
+                    ifelse(dat$diag==1,0,dat$diag))) #정상+경도인지 1, 치매 0
 table(response.raw$diag)
 head(response.raw$diag)
 print(diag)

@@ -5,11 +5,11 @@ library(Epi)
 attach(scoreframe)
 detach(scoreframe)#도합 6548
 #### 진단정보(diag)  1 치매, 3경도인지장애, 5 정상
-#### 진단정보(diag) -> 5 -> 1, 1,3 -> 0
-CTT_a<-filter(scoreframe,CTT>=24&diag==1) #4843
-CTT_b<-filter(scoreframe,CTT>=24&diag==0) #9
-CTT_c<-filter(scoreframe,CTT<=23&diag==1) #1620
-CTT_d<-filter(scoreframe,CTT<=23&diag==0) #76 도합 6548
+#### 진단정보(diag) -> 5,3 -> 1, 1-> 0
+CTT_a<-filter(scoreframe,CTT>=18&diag==1) #이거 고치다가 말았음 여기서부터하기
+CTT_b<-filter(scoreframe,CTT>=18&diag==0) 
+CTT_c<-filter(scoreframe,CTT<=17&diag==1) 
+CTT_d<-filter(scoreframe,CTT<=17&diag==0) 
 CTT_FPR<-(nrow(CTT_c)/(nrow(CTT_a)+nrow(CTT_c)))
 CTT_FNR<-(nrow(CTT_b)/(nrow(CTT_b)+nrow(CTT_d))) 
 CTT_sens<-(nrow(CTT_d)/(nrow(CTT_b)+nrow(CTT_d)))
@@ -62,15 +62,26 @@ CFA_Md<-sqrt((1-CFA_sens)^2+(1-CFA_spec)^2)
 
 #퍼센타일로 찍어누르는게 아니라는 생각이 계속 드는데.. 다른 방법이 있을거같다. 이건 아닌거같아. 어디서부터 잘못된거지?
 
-
-
+#표준점수..?
 library(Epi)
 
-siba<-ROC(scoreframe$CTT, scoreframe$diag) #AUC .909 AIC 631
-siba2<-ROC(round(scoreframe$CFA,2), scoreframe$diag) #AUC .906 AIC 642.2
-siba3<-ROC(round(scoreframe$PCM,2), scoreframe$diag) #AUC 8.479...? AIC 628.6
-siba4<-ROC(round(scoreframe$GPCM,2), scoreframe$diag) #AUC .907 AIC 645.7
+siba<-ROC(scoreframe$CTT, scoreframe$diag) #1.47sd
+siba2<-ROC(round(scoreframe$CFA,2), scoreframe$diag) #1.24 sd
+siba3<-ROC(round(scoreframe$PCM,2), scoreframe$diag) #1.34 sd
+siba4<-ROC(round(scoreframe$GPCM,2), scoreframe$diag) #1.10 sd 
 ###https://stackoverflow.com/questions/23131897/how-can-i-get-the-optimal-cutoff-point-of-the-roc-in-logistic-regression-as-a-nu
+hist(scoreframe$CTT); abline(v=17,col="blue",lwd=2)
+hist(scoreframe$CFA); abline(v=-0.57,col="blue",lwd=2)
+hist(scoreframe$PCM); abline(v=-2.46,col="blue",lwd=2)
+hist(scoreframe$GPCM); abline(v=-1.01,col="blue",lwd=2)
+length(scoreframe$CTT[CTT<=17]); #643/6548 = 0.098
+length(scoreframe$CFA[CFA<=-0.57]) #724/6548 = 0.110
+length(scoreframe$PCM[PCM<=-2.46]) #561/6548 = 0.085
+length(scoreframe$GPCM[GPCM<=-1.01]) #860/6548 = 0.131
+#저 654,724,561,860명 중에 진짜 치매진단 사람의 비율은 어떻게 될까요?
+#위에 식
+
+
 opt <- which.max(rowSums(siba$res[, c("sens", "spec")])) #최적점수찾기
 opt2 <- which.max(rowSums(siba2$res[, c("sens", "spec")])) #최적점수찾기
 opt3 <- which.max(rowSums(siba3$res[, c("sens", "spec")])) #최적점수찾기
