@@ -1,6 +1,6 @@
 install.packages("dplyr")
 install.packages("mirt")
-install.packages("lavaan")
+install.packages("lavaan") #민주쌤 테스트중
 library(dplyr)
 library(mirt)
 library(lavaan)
@@ -9,7 +9,7 @@ dat<-read.csv("C:/git/mmse/mmse.csv",header=T,sep=",")
 head(dat)
 #### 데이터 전처리 ####
 attach(dat)
-#401
+#401 시간지남력 - 연월일 0123 
 a401<-ifelse(C401==3,3,
              ifelse(C401==2,2,
                     ifelse(C401==1,1,
@@ -21,7 +21,7 @@ table(C401,a401,useNA='always')
 length(C401);length(a401)
 table(C401)
 table(a401)
-#402
+#402 시간지남력 - 요일 01
 a402<-ifelse(C402==1,1,
              ifelse(C402==-8,NA,
                     ifelse(C402==-9,0,
@@ -29,7 +29,8 @@ a402<-ifelse(C402==1,1,
 head(a402)
 table(C402,a402,useNA='always')
 length(C402);length(a402)
-#403
+table(a402)
+#403 시간지남력- 계절 01
 a403<-ifelse(C403==1,1,
              ifelse(C403==-8,NA,
                     ifelse(C403==-9,0,
@@ -39,7 +40,7 @@ table(C403)
 table(a403)
 length(C403);length(a403)
 
-#404
+#404 장소지남력 - 현위치 01
 a404<-ifelse(C404==1,1,
              ifelse(C404==-8,NA,
                     ifelse(C404==-9,0,
@@ -48,7 +49,7 @@ table(C404,a404,useNA='always')
 table(C404)
 table(a404)
 length(C404);length(a404)
-#405
+#405 장소지남력 - 시/구/동/번지 01234
 a405<-ifelse(C405==4,4,
              ifelse(C405==3,3,
              ifelse(C405==2,2,
@@ -61,7 +62,7 @@ table(C405,a405,useNA='always')
 table(C405)
 table(a405)
 length(C405);length(a405)
-#406
+#406 기억력 테스트(3단어) 0123
 a406<-ifelse(C406==3,3,
                     ifelse(C406==2,2,
                            ifelse(C406==1,1,
@@ -72,7 +73,7 @@ table(C406,a406,useNA='always')
 table(C406)
 table(a406)
 length(C406);length(a406)
-#407
+#407 주의 집중 및 계산 (뺄셈 1) 01
 a407<-ifelse(C407==1,1,
              ifelse(C407==-8,NA,
                     ifelse(C407==-9,0,
@@ -81,7 +82,7 @@ table(C407,a407,useNA='always')
 table(C407)
 table(a407)
 length(C407);length(a407)
-#408
+#408 주의 집중 및 계산 (뺄셈 2) 01
 a408<-ifelse(C408==1,1,
              ifelse(C408==-8,NA,
                     ifelse(C408==-9,0,
@@ -90,7 +91,7 @@ table(C408,a408,useNA='always')
 table(C408)
 table(a408)
 length(C408);length(a408)
-#409
+#409 주의 집중 및 계산 (뺄셈 3) 01
 a409<-ifelse(C409==1,1,
              ifelse(C409==-8,NA,
                     ifelse(C409==-9,0,
@@ -99,7 +100,7 @@ table(C409,a409,useNA='always')
 table(C409)
 table(a409)
 length(C409);length(a409)
-#410
+#410 주의 집중 및 계산 (뺄셈 4) 01
 a410<-ifelse(C410==1,1,
              ifelse(C410==-8,NA,
                     ifelse(C410==-9,0,
@@ -108,7 +109,7 @@ table(C410,a410,useNA='always')
 table(C410)
 table(a410)
 length(C410);length(a410)
-#411
+#411 주의 집중 및 계산 (뺄셈 5) 01
 a411<-ifelse(C411==1,1,
              ifelse(C411==-8,NA,
                     ifelse(C411==-9,0,
@@ -117,7 +118,7 @@ table(C411,a411,useNA='always')
 table(C411)
 table(a411)
 length(C411);length(a411)
-#412
+#412 기억력 테스트(3단어 재확인) 0123
 a412<-ifelse(C412==3,3,
              ifelse(C412==2,2,
                     ifelse(C412==1,1,
@@ -128,7 +129,7 @@ table(C412,a412,useNA='always')
 table(C412)
 table(a412)
 length(C412);length(a412)
-#413
+#413 소지품의 용도 (소지품 1) 01
 a413<-ifelse(C413==1,1,
              ifelse(C413==-8,NA,
                     ifelse(C413==-9,0,
@@ -137,7 +138,7 @@ table(C413,a413,useNA='always')
 table(C413)
 table(a413)
 length(C413);length(a413)
-#414
+#414 소지품의 용도 (소지품 2) 01
 a414<-ifelse(C414==1,1,
              ifelse(C414==-8,NA,
                     ifelse(C414==-9,0,
@@ -146,7 +147,7 @@ table(C414,a414,useNA='always')
 table(C414)
 table(a414)
 length(C414);length(a414)
-#415
+#415 따라서 말하기 01
 a415<-ifelse(C415==1,1,
              ifelse(C415==-8,NA,
                     ifelse(C415==-9,0,
@@ -155,7 +156,7 @@ table(C415,a415,useNA='always')
 table(C415)
 table(a415)
 length(C415);length(a415)
-#416
+#416 명령시행_종이 뒤집기, 접기, 건네주기 0123
 a416<-ifelse(C416==3,3,
              ifelse(C416==2,2,
                     ifelse(C416==1,1,
@@ -166,8 +167,8 @@ table(C416,a416,useNA='always')
 table(C416)
 table(a416)
 length(C416);length(a416)
-#417
-a417<-ifelse(C417==3,2,
+#417 명령시행_읽고 눈감기 012
+a417<-ifelse(C417==3,1,
                     ifelse(C417==1,1,
                            ifelse(C417==-8,NA,
                                   ifelse(C417==-9,0,
@@ -176,7 +177,7 @@ table(C417,a417,useNA='always')
 table(C417)
 table(a417)
 length(C417);length(a417)
-#418
+#418 명령시행_기분 또는 날씨에 대해 쓰기 01
 a418<-ifelse(C418==1,1,
              ifelse(C418==-8,NA,
                     ifelse(C418==-9,0,
@@ -185,7 +186,7 @@ table(C418,a418,useNA='always')
 table(C418)
 table(a418)
 length(C418);length(a418)
-#419
+#419 명령시행_제시된 그림 똑같이 그리기01
 a419<-ifelse(C419==1,1,
              ifelse(C419==-8,NA,
                     ifelse(C419==-9,0,
@@ -197,21 +198,25 @@ length(C419);length(a419)
 detach(dat)
 #진단정보(diag) 추가
 attach(dat)
-response.raw<-data.frame(a401,a402,a403,a404,a405,a406,a407,a408,a409,a410,a411,a412,a413,a414,a415,a416,a417,a418,a419,dat$diag)
+response.raw<-data.frame(a401,a402,a403,a404,a405,a406,a407,a408,a409,a410,a411,a412,a413,a414,a415,a416,a417,a418,a419,dat$diag,dat$year,dat$edu,dat$gender)
 detach(dat)
 #### 진단정보(diag)  1 치매, 3경도인지장애, 5 정상
 #### 진단정보 치매 + 경도인지장애 합치기
 response.raw$diag<-ifelse(dat$diag==5,1,
-             ifelse(dat$diag==3,1,
-                    ifelse(dat$diag==1,0,dat$diag))) #정상+경도인지 1, 치매 0
+             ifelse(dat$diag==3,0,
+                    ifelse(dat$diag==1,0,dat$diag))) #정상1, 경도인지 + 치매 0
 table(response.raw$diag)
 head(response.raw$diag)
 print(diag)
+#### 나이변환
+response.raw$dat.year<-2021-response.raw$dat.year
 #검사 응답이 모두 NA인 행제거
 response.clean <- response.raw %>% filter(!is.na(a401) & !is.na(a402) &!is.na(a403)&!is.na(a404)&!is.na(a405)&!is.na(a406)&!is.na(a407)&!is.na(a408)&!is.na(a409)&!is.na(a410)&!is.na(a411)&!is.na(a412)&!is.na(a413)&!is.na(a414)&!is.na(a415)&!is.na(a416)&!is.na(a417)&!is.na(a418)&!is.na(a419))
 response<-response.clean
-#검사응답이 모두 NA인 행을 제거한 진단정보(diag)
-clean.diag<-response[,21] #이거 진단 넘버 잘봐야함 !!!!!!! 20은 진땡 21은 수정한 것
+#검사응답이 모두 NA인 행을 제거한연령 학력, 성별 진단정보(diag), 
+clean.diag<-response[,21:24] #이거 진단 넘버 잘봐야함 !!!!!!!
+# 성별: 남1 여5
+# 학력: 초졸이하1 중졸2 고졸3 대졸이상4 
 #진단정보(diag)제외한 검사세트 찐클린
 response<-response[,1:19]
 #### CTT 점수산출 ####
@@ -271,9 +276,9 @@ score.frame<-cbind(score.CTT,score.CFA,score.PCM,score.GPCM)
 colnames(score.frame)<-c("CTT","CFA","PCM","GPCM")
 head(score.frame)
 score.frame.t<-as_tibble(score.frame)
-#진단정보 추가
-scoreframe<-cbind(score.frame.t,clean.diag) 
-colnames(scoreframe)  <- c('CTT','CFA','PCM','GPCM','diag') ###########사실상 데이터 완성본 #####
+#스코어 프레임
+scoreframe<-cbind(score.frame.t,clean.diag)
+colnames(scoreframe)  <- c('CTT','CFA','PCM','GPCM','age','edu','gender','diag') ###########사실상 데이터 완성본 #####
 
 
 ##상관그림
@@ -293,7 +298,7 @@ cor(CFA,PCM)
 cor(CFA,GPCM)
 cor(PCM,GPCM)
 detach(score.frame.t)
-
+par(mfrow=)
 
 #### 특정점수 이하 분석 ####
 #CTT 특정점수이하만 남기기
