@@ -1,6 +1,7 @@
 install.packages("dplyr")
 install.packages("mirt")
-install.packages("lavaan") #민주쌤 테스트중
+install.packages("lavaan")
+install.packages("Epi")
 library(dplyr)
 library(mirt)
 library(lavaan)
@@ -201,6 +202,9 @@ attach(dat)
 response.raw<-data.frame(a401,a402,a403,a404,a405,a406,a407,a408,a409,a410,a411,a412,a413,a414,a415,a416,a417,a418,a419,dat$diag,dat$year,dat$edu,dat$gender)
 detach(dat)
 #### 진단정보(diag)  1 치매, 3경도인지장애, 5 정상
+#24~30 정상
+#18~23 경도인지장애
+#0~17 분명한 인지기능장애
 #### 진단정보 치매 + 경도인지장애 합치기
 response.raw$diag<-ifelse(dat$diag==5,1,
              ifelse(dat$diag==3,0,
@@ -219,6 +223,10 @@ clean.diag<-response[,21:24] #이거 진단 넘버 잘봐야함 !!!!!!!
 # 학력: 초졸이하1 중졸2 고졸3 대졸이상4 
 #진단정보(diag)제외한 검사세트 찐클린
 response<-response[,1:19]
+######################################################################################
+######################################################################################
+######################################################################################
+######################################################################################
 #### CTT 점수산출 ####
 score.CTT<-vector("double",nrow(response))
 for ( i in 1:nrow(response) ){
@@ -280,6 +288,9 @@ score.frame.t<-as_tibble(score.frame)
 scoreframe<-cbind(score.frame.t,clean.diag)
 colnames(scoreframe)  <- c('CTT','CFA','PCM','GPCM','age','edu','gender','diag') ###########사실상 데이터 완성본 #####
 
+cri<-quantile(scoreframe$CTT,.7)
+print(cri)
+nrow(scoreframe[scoreframe$CTT<=cri,])
 
 ##상관그림
 plot(score.frame.t)
