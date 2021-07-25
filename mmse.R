@@ -373,23 +373,35 @@ filter(sdcut_PCM,CTT>=15)
 filter(sdcut_GPCM,CTT>=16)
 filter(sdcut_CFA,CTT>=18)
 detach(score.frame.t)
-# 중심화
-score.frame.t
-v.score<-scale(score.frame.t,scale=T)
-v.score<-as_tibble(v.score)
-attach(v.score)
-x_range=seq(-5,2,by=0.5)
-y_max=2000
-hist_CTT<-hist(CTT, breaks=x_range, plot = FALSE)
+
+#히스토그램 - PCM GPCM CFA 겹쳐서 그리기 -> 레인지가 다르다 다르다 다르다
+attach(score.frame.t)
+x_range=seq(-6,3,by=0.05)
+y_max=2500
+#hist_CTT<-hist(CTT, breaks=x_range, plot = FALSE)
 hist_CFA<-hist(CFA, breaks=x_range, plot = FALSE)
 hist_PCM<-hist(PCM, breaks=x_range, plot = FALSE)
 hist_GPCM<-hist(GPCM, breaks=x_range, plot = FALSE)
-plot(hist_CTT, col=adjustcolor("red",alpha=0.5),ann=FALSE,axes=FALSE,ylim=c(0,y_max))
-plot(hist_CFA,col=adjustcolor("green",alpha=0.5), add = TRUE)
+#plot(hist_CTT, col=adjustcolor("red",alpha=0.5),ann=FALSE,axes=FALSE,ylim=c(0,y_max))
+plot(hist_CFA,col=adjustcolor("green",alpha=0.5),ann=FALSE,axes=FALSE,ylim=c(0,y_max))
 plot(hist_PCM,col=adjustcolor("blue",alpha=0.5), add = TRUE)
-plot(hist_GPCM,col=adjustcolor("yellow",alpha=0.5), add = TRUE)
-detach(v.score)
+plot(hist_GPCM,col=adjustcolor("red",alpha=0.5), add = TRUE)
+detach(score.frame.t)
 
+# 히스토그램 핀포인트 각각 그리기
+attach(score.frame.t)
+#x_range=seq(-6,3,by=0.05)
+#y_max=2500
+#hist_CFA<-hist(CFA, breaks=x_range, plot = TRUE)
+#hist_PCM<-hist(PCM, breaks=x_range, plot = TRUE)
+#hist_GPCM<-hist(GPCM, breaks=x_range, plot = TRUE)
+par(mfrow=c(2,2))
+hist(CTT);abline(v=quantile(CTT,probs = 0.25),col="blue",lwd=2)
+hist(CFA);abline(v=quantile(CFA,probs = 0.25),col="blue",lwd=2)
+hist(PCM);abline(v=quantile(PCM,probs = 0.25),col="blue",lwd=2)
+hist(GPCM);abline(v=quantile(GPCM,probs = 0.25),col="blue",lwd=2)
+par(mfrow=c(1,1))
+detach(score.frame.t)
 #### 힛트다 힛트 CTT ####
 # 17이하 치매의심, 18이상 23이하 인지기능 저하, 24이상 정상
 attach(scoreframe) #도합 6548
